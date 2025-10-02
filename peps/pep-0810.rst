@@ -337,8 +337,12 @@ as it would have been if it had been imported eagerly, barring intervening
 changes to the import system (e.g. to ``sys.path``, ``sys.meta_path``,
 ``sys.path_hooks`` or ``__import__``).
 
-Reification still calls ``__import__`` to resolve the import. Once the module is
-reified, it's removed from ``sys.lazy_modules``.
+Reification still calls ``__import__`` to resolve the import. Once the
+module is reified, it's removed from ``sys.lazy_modules``. When a package is
+reified and submodules in the package were also previously lazily imported,
+those submodules are *not* automatically reified but they *are* added to the
+reified package's globals (unless the package already assigned something
+else to the name of the submodule).
 
 If reification fails (e.g., due to an ``ImportError``), the exception is enhanced
 with chaining to show both where the lazy import was defined and where it was first
